@@ -73,8 +73,9 @@
         const Ul = create('ul');
         Ul.classList.add('container')
          let usersHtml = "";
+
          for(user of users){
-            usersHtml += "<li src="+user.avatar_url+">" + user.id + " " + user.login + "</li>"
+            usersHtml += "<li>" +"<img src="+user.avatar_url+">"+ user.id + " " + user.login + "</li>"
 
          }
          Ul.innerHTML = usersHtml
