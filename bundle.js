@@ -9,7 +9,7 @@
     Login.classList.add('login');
 
     const Logo = create('img');
-    Logo.src = './assets/images/logo.svg';
+    Logo.src = 'logo.svg';
     Logo.classList.add('logo');
 
     const Form = create('form');
