@@ -9,7 +9,7 @@
     Login.classList.add('login');
 
     const Logo = create('img');
-    Logo.src = 'logo.svg';
+    Logo.src = './assets/images/logo.svg';
     Logo.classList.add('logo');
 
     const Form = create('form');
@@ -19,12 +19,12 @@
         /*const email = selector('#email')
         const password = selector('#password')*/
         const [email, password] = event.target;
-        const {url} = await fakeAuthenticate(email.value, password.value);
+        const {url,token} = await fakeAuthenticate(email.value, password.value);
 
         location.href='#users';
         
         const users = await getDevelopersList(url);
-        console.log(getDevelopersList)
+        console.log(users)
         renderPageUsers(users);
     };
 
@@ -35,70 +35,35 @@
             : button.removeAttribute('disabled');
     };
 
-    Form.innerHTML = '<div class=" flex-container">'+'</br>'+ '<input id="email" name="email" type="email" placeholder="Entre com seu e-mail"/>' +'</br>'+ '<input id="password" name="password" type="password" placeholder="Digite sua senha supersecreta"/>' +'</br>' +'<input id="login" type="submit" name="Entrar" value="Entrar" action="getDevelopersList()"/>'+'</br>'+'</div>'
+    Form.innerHTML = '<div class=" flex-container">'+ '<input id="email" name="email" type="email" placeholder="Entre com seu e-mail"/>' +'<input id="password" name="password" type="password" placeholder="Digite sua senha supersecreta"/>'+'<input id="login" type="submit" name="Entrar" value="Entrar" action="getDevelopersList()"/>'+'</div>'
 
-    /**
-    * bloco de código omitido
-    * monte o seu formulário
-    */
 
     app.appendChild(Logo);
     Login.appendChild(Form);
 
     async function fakeAuthenticate(email, password) {
-        window.onload = function(){  
-        var xhr = new XMLHttpRequest();
-        xhr.open("GET", "http://www.mocky.io/v2/5dba690e3000008c00028eb6, true");
-                    xhr.onload = function (e) {
-                      if (xhr.readyState === 4) {
-                        if (xhr.status === 200) {
-                          console.log(xhr);
-                        } else {
-                          console.error(xhr);
-                        }
-          }
-        };
-        xhr.onerror = function (e) {
-          console.error(xhr);
-        };
-        xhr.send(null); 
-        }
+      return new Promise((resolve, reject) => {
+        fetch("http://www.mocky.io/v2/5dba690e3000008c00028eb6")
+        .then(response => response.json())
+        .then(data =>{
+          const fakeJwtToken = `${btoa(email+password)}.${btoa(data.url)}.${(new Date()).getTime()+300000}`;
+          resolve({token:fakeJwtToken, url:data.url})
+        })  
+      })
+      /* trecho omitido */
 
-        /**
-         * bloco de código omitido
-         * aqui esperamos que você faça a requisição ao URL informado
-         */
-         console.log(password)
-        const fakeJwtToken = `${btoa(email+password)}.${btoa(data.url)}.${(new Date()).getTime()+300000}`;
-        /* trecho omitido */
-
-        return data;
     }
 
-    async function getDevelopersList(url) {
-     
-        var xhr = new XMLHttpRequest();
-        xhr.open("GET", "http://www.mocky.io/v2/5dba68fb3000007400028eb5, true");
-                    xhr.onload = function (e) {
-                      if (xhr.readyState === 4) {
-                        if (xhr.status === 200) {
-                          console.log(xhr);
-                        } else {
-                          console.error(xhr);
-                        }
-          }
-        };
-        xhr.onerror = function (e) {
-          console.error(xhr);
-        };
-        xhr.send(null); 
-       
 
-        /**
-         * bloco de código omitido
-         * aqui esperamos que você faça a segunda requisição 
-         * para carregar a lista de desenvolvedores
-         */
+    async function getDevelopersList(url) {
+        return new Promise((resolve, reject) => {
+        fetch(url)
+        .then(response => response.json())
+        .then(data =>{
+          resolve(data)
+        })  
+      })
+
     }
 
     function renderPageUsers(users) {
@@ -107,12 +72,12 @@
 
         const Ul = create('ul');
         Ul.classList.add('container')
+         let usersHtml = "";
+         for(user of users){
+            usersHtml += "<li src="+user.avatar_url+">" + user.id + " " + user.login + "</li>"
 
-        /**
-         * bloco de código omitido
-         * exiba a lista de desenvolvedores
-         */
-
+         }
+         Ul.innerHTML = usersHtml
         app.appendChild(Ul)
     }
 
