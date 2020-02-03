@@ -29,8 +29,7 @@
     };
 
     Form.oninput = e => {
-        console.log(e.target.parentElement)
-        //const [email, password, button] = e.target.parentElement.children;
+        const [email, password, button] = e.target.parentElement.children;
         (!email.validity.valid || !email.value || password.value.length <= 5) 
             ? button.setAttribute('disabled','disabled')
             : button.removeAttribute('disabled');
